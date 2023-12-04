@@ -1,80 +1,70 @@
 ---
 layout: page
-title: project 4
-description: another without an image
-img:
+title: Classical Music Generator
+description: CS180 Artificial Intelligence, Fall 2021
+img: assets/img/music_gen.jpg
 importance: 3
-category: fun
+category: Class
 ---
-
-Every project has a beautiful feature showcase page.
-It's easy to include images in a flexible 3-column grid format.
-Make your photos 1/3, 2/3, or full width.
-
-To give your project a background in the portfolio page, just add the img tag to the front matter like so:
-
-    ---
-    layout: page
-    title: project
-    description: a project with a background image
-    img: /assets/img/12.jpg
-    ---
-
-<div class="row">
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.html path="assets/img/1.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.html path="assets/img/3.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.html path="assets/img/5.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
+#### TL;DR:
+ We present a classical music generator which can extend a given tune into complete music composition with melody and chords as accompaniments.
+feat. HMM, MC, DBN, LSTM
+<div class="row justify-content-sm-center">
+    <div class="col-sm-6 mt-4 mt-md-0">
+        {% include figure.html path="assets/img/music_gen.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
     </div>
 </div>
 <div class="caption">
-    Caption photos easily. On the left, a road goes through a tunnel. Middle, leaves artistically fall in a hipster photoshoot. Right, in another hipster photoshoot, a lumberjack grasps a handful of pine needles.
+    Overall Architecture
 </div>
-<div class="row">
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.html path="assets/img/5.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
+In this work, we experimented with both
+## Markov models 
+We extend the melody using:
+*  **Markov Chain** (1-3 orders)
+*  **Dynamic Bayes Network** \\
+where we exploit the correlation between features of one note: from MIDI note numbers (0-127) into scientific pitch notation (C0-G\#9)\\
+e.g. Note G4: pitch name (sol) and pitch group (the fourth group) may have certain correlation given the evidence from the previous note, say A5. 
+(Simplest intuition: choose G4 because G4 is closer to A5 than G5 )
+<div class="row justify-content-sm-center">
+    <div class="col-sm-6 mt-4 mt-md-0">
+        {% include figure.html path="assets/img/bn.jpeg" title="example image" class="img-fluid rounded z-depth-1" %}
     </div>
 </div>
 <div class="caption">
-    This image can also have a caption. It's like magic.
+    Our Dynamic Bayesian Net.
 </div>
 
-You can also put regular text between your rows of images.
-Say you wanted to write a little bit about your project before you posted the rest of the images.
-You describe how you toiled, sweated, *bled* for your project, and then... you reveal its glory in the next row of images.
-
+We predict chords given melody using:
+* **Hidden Markov Models**\\
+where the hidden states are chords and evidence are melody, because chord progressions are the defining feature on which melody and rhythm are built.
 
 <div class="row justify-content-sm-center">
-    <div class="col-sm-8 mt-3 mt-md-0">
-        {% include figure.html path="assets/img/6.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
+    <div class="col-sm-6 mt-3 mt-md-0">
+        {% include figure.html path="assets/img/trans.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
     </div>
-    <div class="col-sm-4 mt-3 mt-md-0">
-        {% include figure.html path="assets/img/11.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
+    <div class="col-sm-6 mt-3 mt-md-0">
+        {% include figure.html path="assets/img/ems.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
     </div>
 </div>
 <div class="caption">
-    You can also have artistically styled 2/3 + 1/3 images, like these.
+    HeatMap of matrices in HMM.
 </div>
 
+We trained our HMM model using 490 classical musical compositions from Bach. From the above figures, we can detect some hidden patterns. For example, Bach preferred to use Major triads. We can read from the heatmap of the chords transition matrix that, whether the previous chord is a Major triad or a Minor triad, it is al- ways with a low probability for it to turn into a Minor triad.
+## LSTM network	
+Where we generate melody and chords together (i.e. multiple notes can be pressed at the same time step) via a multi-label classification objective.	
 
-The code is simple.
-Just wrap your images with `<div class="col-sm">` and place them inside `<div class="row">` (read more about the <a href="https://getbootstrap.com/docs/4.4/layout/grid/">Bootstrap Grid</a> system).
-To make images responsive, add `img-fluid` class to each; for rounded corners and shadows use `rounded` and `z-depth-1` classes.
-Here's the code for the last row of images above:
-
-{% raw %}
-```html
+## Results
 <div class="row justify-content-sm-center">
-    <div class="col-sm-8 mt-3 mt-md-0">
-        {% include figure.html path="assets/img/6.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
+    <div class="col-sm-5 mt-3 mt-md-0">
+        {% include figure.html path="assets/img/markov.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
     </div>
-    <div class="col-sm-4 mt-3 mt-md-0">
-        {% include figure.html path="assets/img/11.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
+    <div class="col-sm-5 mt-3 mt-md-1">
+        {% include figure.html path="assets/img/lstm.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
     </div>
 </div>
-```
-{% endraw %}
+<div class="caption">
+    Visualization of the generated music
+</div>
+
+
