@@ -1,8 +1,8 @@
 ---
 layout: post
-date: 2015-10-22 15:59:00-0400
+date: 24-01-16
 inline: true
 related_posts: false
 ---
 
-A simple inline announcement.
+Our work [Recursive Composition Augmented Transformer](https://arxiv.org/abs/2309.16319) has been accepted to ICLR 2024!
